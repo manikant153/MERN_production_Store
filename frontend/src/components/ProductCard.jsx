@@ -87,11 +87,13 @@ const ProductCard = ({ product }) => {
         shadow: "xl",
       }}
       bg={bg}
+      h={{ base: "200px", md: "250px" }}
+      w="full"
     >
       <Image
         src={product.image}
         alt={product.name}
-        h={48}
+        h="full"
         w="full"
         objectFit="cover"
       />
