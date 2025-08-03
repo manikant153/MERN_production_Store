@@ -1,30 +1,30 @@
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
-import React, { useState } from "react";
 import {
   Box,
+  Button,
   Heading,
   HStack,
   IconButton,
   Image,
-  useColorModeValue,
-  Text,
-  useToast,
-  useDisclosure,
-  ModalOverlay,
-  ModalHeader,
-  ModalContent,
-  ModalCloseButton,
-  ModalBody,
   Input,
-  VStack,
   Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
   ModalFooter,
-  Button,
+  ModalHeader,
+  ModalOverlay,
+  Text,
+  useColorModeValue,
+  useDisclosure,
+  useToast,
+  VStack,
 } from "@chakra-ui/react";
 import { useProductStore } from "../store/product";
+import { useState } from "react";
 
 const ProductCard = ({ product }) => {
-  const [updatedProduct, setUpdateProduct] = useState(product);
+  const [updatedProduct, setUpdatedProduct] = useState(product);
 
   const textColor = useColorModeValue("gray.600", "gray.200");
   const bg = useColorModeValue("white", "gray.800");
@@ -56,6 +56,7 @@ const ProductCard = ({ product }) => {
 
   const handleUpdateProduct = async (pid, updatedProduct) => {
     const { success, message } = await updateProduct(pid, updatedProduct);
+    onClose();
     if (!success) {
       toast({
         title: "Error",
@@ -73,7 +74,6 @@ const ProductCard = ({ product }) => {
         isClosable: true,
       });
     }
-    onClose(); // ✅ close only after toast
   };
 
   return (
@@ -81,30 +81,28 @@ const ProductCard = ({ product }) => {
       shadow="lg"
       rounded="lg"
       overflow="hidden"
-      transition="all 0.3s ease"
-      _hover={{
-        transform: "translateY(-5px)",
-        shadow: "xl",
-      }}
+      transition="all 0.3s"
+      _hover={{ transform: "translateY(-5px)", shadow: "xl" }}
       bg={bg}
-      h={{ base: "200px", md: "250px" }}
-      w="full"
     >
       <Image
         src={product.image}
         alt={product.name}
-        h="full"
+        h={48}
         w="full"
         objectFit="cover"
       />
+
       <Box p={4}>
         <Heading as="h3" size="md" mb={2}>
           {product.name}
         </Heading>
+
         <Text fontWeight="bold" fontSize="xl" color={textColor} mb={4}>
           ${product.price}
         </Text>
-        <HStack spacing={4}>
+
+        <HStack spacing={2}>
           <IconButton icon={<EditIcon />} onClick={onOpen} colorScheme="blue" />
           <IconButton
             icon={<DeleteIcon />}
@@ -116,6 +114,7 @@ const ProductCard = ({ product }) => {
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
+
         <ModalContent>
           <ModalHeader>Update Product</ModalHeader>
           <ModalCloseButton />
@@ -126,7 +125,7 @@ const ProductCard = ({ product }) => {
                 name="name"
                 value={updatedProduct.name}
                 onChange={(e) =>
-                  setUpdateProduct({ ...updatedProduct, name: e.target.value })
+                  setUpdatedProduct({ ...updatedProduct, name: e.target.value })
                 }
               />
               <Input
@@ -135,7 +134,10 @@ const ProductCard = ({ product }) => {
                 type="number"
                 value={updatedProduct.price}
                 onChange={(e) =>
-                  setUpdateProduct({ ...updatedProduct, price: e.target.value })
+                  setUpdatedProduct({
+                    ...updatedProduct,
+                    price: e.target.value,
+                  })
                 }
               />
               <Input
@@ -143,11 +145,15 @@ const ProductCard = ({ product }) => {
                 name="image"
                 value={updatedProduct.image}
                 onChange={(e) =>
-                  setUpdateProduct({ ...updatedProduct, image: e.target.value })
+                  setUpdatedProduct({
+                    ...updatedProduct,
+                    image: e.target.value,
+                  })
                 }
               />
             </VStack>
           </ModalBody>
+
           <ModalFooter>
             <Button
               colorScheme="blue"
@@ -165,5 +171,4 @@ const ProductCard = ({ product }) => {
     </Box>
   );
 };
-
 export default ProductCard;
